@@ -1,51 +1,74 @@
-console.log("javascript started");
 $(document).ready(function(){
-    console.log("ready");
     var division =  $('#movable-div');
-        division.css({"position":"absolute", "top" : ((($(window).height() - division.height() ) / 2) + "px"), "left": ((( $(window).width() - division.width() ) / 2) + "px")});
-  //  $('#left').html(Math.floor(((( $(window).width() - division.width() ) / 2) + "px"));
-    //       $('#top').html(Math.floor(((($(window).height() - division.height() ) / 2) + "px")));
-        $(document).bind('keydown', function(event){
-            console.log("key down event");
-            var position = division.position();
-            if(event.keyCode == 37){
-                $('#event').html("Left Arrow Key pressed !");
-                division.animate(
-                    {
-                      left : ((position.left-20 >= 10) ? (position.left-20) : 10) 
-                    },
-                    'fast'
-                );
-            }
-            if(event.keyCode == 39){
-                $('#event').html("Right Arrow Key pressed !");
-                division.animate(
-                    {
-                      left : ((position.left + division.width() + 20 <= ($('#container').width() - 10) ) ? (position.left + 20) : position.left) 
-                    },
-                    'fast'
-                );
-            }
-            if(event.keyCode == 38){
-                $('#event').html("Up Arrow Key pressed !");
-                division.animate(
-                    {
-                      top : ((position.top-20 >= 10) ? (position.top-20) : 10) 
-                    },
-                    'fast'
-                );
-            }
-            if(event.keyCode == 40){
-                $('#event').html("Down Arrow Key pressed !");
-                division.animate(
-                    {
-                      top : ((position.top + division.height() + 20 <= ($('#container').height() - 10) ) ? (position.top + 20) : position.top)  
-                    },
-                    'fast'
-                );
-            }
-                $('#left').html(Math.floor(position.left));
-                $('#top').html(Math.floor(position.top));
+    var DISPLACEMENT = 20;
+    var SPEED = 30;
 
+    function  setBlockToCenter(){
+         division.css(
+             {
+            "top" : ((($(window).height() - division.height() ) / 2) + "px"),
+            "left": ((( $(window).width() - division.width() ) / 2) + "px")
+             });
+    }
+
+    function setPositionLables(){
+        $('#left').html(Math.floor(division.offset().left));
+        $('#top').html(Math.floor(division.offset().top));
+    }
+    var hashToAnimate = {left : 0, top : 0}; 
+    function moveBlock(leftValue, topValue, message){
+        hashToAnimate.left = leftValue;
+        hashToAnimate.top = topValue;
+        division.animate(hashToAnimate, SPEED);
+        $('#event').html(message);
+        setPositionLables();
+    }
+    
+    var masterHash = {
+        v37 : {
+            leftValueExpression : "((position.left-DISPLACEMENT >= 10) ? (position.left-DISPLACEMENT) : 10)",
+            topValueExpression : "(position.top)",
+            message : "Left Arrow key pressed!"
+        },
+        v39: {
+            leftValueExpression : "((position.left + division.width() + DISPLACEMENT <= ($(window).width() - 30) ) ? (position.left + DISPLACEMENT) : position.left)",
+            topValueExpression : "(position.top)",
+            message : "Right Arrow key pressed!"
+        },
+        v38: {
+            leftValueExpression : "(position.left)",
+            topValueExpression : "((position.top-DISPLACEMENT >= 10) ? (position.top-DISPLACEMENT) : 10)",
+            message : "Up Arrow key pressed!"
+        },
+        v40: {
+            leftValueExpression : "(position.left)",
+            topValueExpression : "((position.top + division.height() + DISPLACEMENT <= ($(window).height() - 30) ) ? (position.top + DISPLACEMENT) : position.top)",
+            message : "Left Arrow key pressed!"
+        }
+    };
+
+    setBlockToCenter();
+    setPositionLables();
+    $(document).bind('keydown', function(event){
+        var position = division.offset();
+        if(37 <= event.keyCode <= 40) {
+            var leftValue = eval(eval("masterHash.v"+event.keyCode+".leftValueExpression"));
+            var topValue = eval(eval("masterHash.v"+event.keyCode+".topValueExpression"));
+            var message = eval("masterHash.v"+event.keyCode+".message");
+            moveBlock(leftValue, topValue, message);
+        }
+        setPositionLables();
         });
+    
+    $(window).resize(function() {
+        var height = $(window).height();
+        var width = $(window).width();
+        if(height < division.offset().top+division.height()+30){
+              moveBlock(division.offset().left, (height - 40 - division.height()), "Window Resized!");
+        }
+        if(width < division.offset().left+division.width()+30){
+              moveBlock((width - 40 - division.width()), division.offset().top, "Window Resized!");
+        }
+    });
+
 });
