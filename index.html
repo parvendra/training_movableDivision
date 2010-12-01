@@ -3,11 +3,19 @@
     <meta http-equiv="Content-Type" content="text/html">
     <title>Movable Division</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script scr="jquery-1.4.4.js" type="text/javascript" ></script>
-    <script type="text/javascript" scr="move.js" ></script>
+    <script src="jquery-1.4.4.js" type="text/javascript" ></script>
+    <script type="text/javascript" src="move.js" ></script>
   </head>
   <body>
-    <div id="movable-div" class="movable">Use Arrow Keys to move this Division </div>
+    <div id="container">
+      <div id="movable-div" class="movable">
+        Use Arrow Keys to move this Division <br />
+        <b>Event :</b> <span id="event"></span> <br /><br />
+        <b>Current Position </b>
+        Left: <span id="left"></span>,
+        Right: <span id="top"></span>
+      </div>
+    </div>
   </body>
 </html>
 

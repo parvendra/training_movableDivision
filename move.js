@@ -1,19 +1,51 @@
 console.log("javascript started");
 $(document).ready(function(){
-        $('#movable-div').css({'top': '200px', 'left' : '300px'})
-        .keydown(function(event){
+    console.log("ready");
+    var division =  $('#movable-div');
+        division.css({"position":"absolute", "top" : ((($(window).height() - division.height() ) / 2) + "px"), "left": ((( $(window).width() - division.width() ) / 2) + "px")});
+  //  $('#left').html(Math.floor(((( $(window).width() - division.width() ) / 2) + "px"));
+    //       $('#top').html(Math.floor(((($(window).height() - division.height() ) / 2) + "px")));
+        $(document).bind('keydown', function(event){
             console.log("key down event");
-            var div = $('#movable-div').get(0);
+            var position = division.position();
             if(event.keyCode == 37){
-                div.offset().left = (div.offset().left - 20) ? (div.offset().left - 20) : 0;
+                $('#event').html("Left Arrow Key pressed !");
+                division.animate(
+                    {
+                      left : ((position.left-20 >= 10) ? (position.left-20) : 10) 
+                    },
+                    'fast'
+                );
             }
             if(event.keyCode == 39){
-                div.offset().right = (div.offset().right - 20) ? (div.offset().right - 20) : 0;
+                $('#event').html("Right Arrow Key pressed !");
+                division.animate(
+                    {
+                      left : ((position.left + division.width() + 20 <= ($('#container').width() - 10) ) ? (position.left + 20) : position.left) 
+                    },
+                    'fast'
+                );
+            }
             if(event.keyCode == 38){
-                div.offset().top = (div.offset().top - 20) ? (div.offset().top - 20) : 0;
+                $('#event').html("Up Arrow Key pressed !");
+                division.animate(
+                    {
+                      top : ((position.top-20 >= 10) ? (position.top-20) : 10) 
+                    },
+                    'fast'
+                );
             }
             if(event.keyCode == 40){
-                div.offset().left = (div.offset().left - 20) ? (div.offset().left - 20) : 0;
+                $('#event').html("Down Arrow Key pressed !");
+                division.animate(
+                    {
+                      top : ((position.top + division.height() + 20 <= ($('#container').height() - 10) ) ? (position.top + 20) : position.top)  
+                    },
+                    'fast'
+                );
             }
-        }
+                $('#left').html(Math.floor(position.left));
+                $('#top').html(Math.floor(position.top));
+
+        });
 });
