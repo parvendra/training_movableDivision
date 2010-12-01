@@ -1,0 +1,10 @@
+#movable-div {
+   height: 80px;
+   width: 100px;
+   padding:0.8em;
+   margin-bottom:1em;
+   border:2px solid #ddd;
+   background:#fbe3e4;
+   color:#8a1f11;
+   border-color:#fbc2c4;
+}
